@@ -6,7 +6,9 @@ import os
 
 def check_file_exists(filename, query, url):
     '''
-    students - add docstring
+    this function will take a filename, query, and url to check if a file exists
+    if it works it will load the dataset from either a sql database or from the
+    local .csv file
     '''
     if os.path.exists(filename):
         print('this file exists, reading csv')
@@ -21,8 +23,8 @@ def check_file_exists(filename, query, url):
 
 def get_iris_data():
     '''
-    acquires the iris data from either sql or a csv 
-    and returns the iris dataframe
+    this fucnction will return a dataframe containing
+    data from the iris database
     '''
     url = env.get_db_url('iris_db')
     query = '''
@@ -40,8 +42,8 @@ def get_iris_data():
 
 def get_titanic_data():
     '''
-    acquires the titanic data from either sql or a csv 
-    and returns the titanic dataframe
+   this fucnction will return a dataframe containing
+    data from the titanic database
     '''
     url = env.get_db_url('titanic_db')
     query = 'select * from passengers'
@@ -55,20 +57,23 @@ def get_titanic_data():
 
 def get_telco_data():
     '''
-    acquires the telco data from either sql or a csv 
-    and returns the telco dataframe
+    this fucnction will return a dataframe containing
+    data from the telco_churn database
     '''
     url = env.get_db_url('telco_churn')
     query = '''
     select *
     from customers
-        left join contract_types
+        join contract_types
             using (contract_type_id)
-        left join internet_service_types
+        join internet_service_types
             using (internet_service_type_id)
-        left join payment_types
+        join payment_types
             using (payment_type_id)
     '''
     
-    df = pd.read_sql(query, url)
+    filename = 'telco_churn.csv'
+
+    #call the check_file_exists fuction 
+    df = check_file_exists(filename, query, url)
     return df
